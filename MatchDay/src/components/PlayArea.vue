@@ -15,14 +15,14 @@
       <div v-if="hand[2]">
         <p>{{ hand[2].suit }} {{ hand[2].rank }}</p>
       </div>
-      <div v-else-if="!hand[2] && drawOptions[0]">
-        <v-btn @click="drawOptionOne()">{{ drawOptions[0].suit }} {{ drawOptions[0].rank }}</v-btn>
+      <div v-else-if="!hand[2] && choices[0]">
+        <v-btn @click="drawOptionOne()">{{ choices[0].suit }} {{ choices[0].rank }}</v-btn>
       </div>
       <div v-if="hand[3]">
         <p>{{ hand[3].suit }} {{ hand[3].rank }}</p>
       </div>
-      <div v-else-if="!hand[3] && drawOptions[1]">
-        <v-btn @click="drawOptionTwo()">{{ drawOptions[1].suit }} {{ drawOptions[1].rank }}</v-btn>
+      <div v-else-if="!hand[3] && choices[1]">
+        <v-btn @click="drawOptionTwo()">{{ choices[1].suit }} {{ choices[1].rank }}</v-btn>
       </div>
       <div v-if="hand[4]">
         <p>{{ hand[4].suit }} {{ hand[4].rank }}</p>
@@ -44,27 +44,35 @@
     </div>
   </div>
   <div>
-    <v-btn @click="onDealCardsClick()">Deal</v-btn>
-    <v-btn @click="onRandomCardClick()">Random Card</v-btn>
+    <v-btn @click="onDealCardsClick()" :disabled="choices.length > 0">Deal</v-btn>
+    <v-btn @click="onResetDeckClick()">Reset</v-btn>
   </div>
 </div>
 </template>
 
 <script>
-
+import { mapState } from 'vuex'
+  
 export default {
   computed: {
+    ...mapState([
+      // 'hand'
+    ]),
     deck: {
       get () {
         return this.$store.state.deck;
       }
     },
-    randomCard: {
+    hand: {
       get () {
-        
+        return this.$store.state.hand;
       }
     },
-
+    choices: {
+      get () {
+        return this.$store.state.choices;
+      }
+    },
   },
   data () {
     return {
@@ -77,14 +85,14 @@ export default {
         'h',
         'd'
       ],
-      hand: [],
-      drawOptions: []
     }
   },
   methods: {
     onDealCardsClick () {
       let drewCards = [];
-      let drewOptions = [];
+      let drewChoices = [];
+
+      this.resetDeck();
 
       for (let i = 0; i < 2; i++) {
         let randomCard = this.getRandomCard();
@@ -92,38 +100,52 @@ export default {
         this.removeCardFromDeck(randomCard.id)
 
         let randomOptionCard = this.getRandomCard();
-        drewOptions.push(randomOptionCard)
+        drewChoices.push(randomOptionCard)
         this.removeCardFromDeck(randomOptionCard.id)
       }
-
-      this.hand = drewCards;
-      this.drawOptions = drewOptions;
-
-      console.log("Hand: ", this.hand)
-      console.log("Options: ", this.drawOptions)
+      this.$store.dispatch('firstDraw', {hand: drewCards, choices: drewChoices})
+      // this.hand = drewCards;
+      // this.drawOptions = drewChoices;
     },
     drawOptionOne () {
       let lastThreeCards = []
-      lastThreeCards.push(this.drawOptions[0])
+      lastThreeCards.push(this.choices[0])
+
+      for (let i = 0; i < 2; i++) {
+        let randomCard = this.getRandomCard();
+        lastThreeCards.push(randomCard)
+        this.removeCardFromDeck(randomCard.id)
+      }
+      this.$store.dispatch('lastDraw', lastThreeCards)
+      // this.hand.concat(lastThreeCards);
     },
     drawOptionTwo () {
       let lastThreeCards = []
-      lastThreeCards.push(this.drawOptions[1])
-    },
-    onRandomCardClick () {
-      let randomCard = this.getRandomCard();
-      this.removeCardFromDeck(randomCard.id)
-      console.log(this.getRandomCard())
+      lastThreeCards.push(this.choices[1])
+
+      for (let i = 0; i < 2; i++) {
+        let randomCard = this.getRandomCard();
+        lastThreeCards.push(randomCard)
+        this.removeCardFromDeck(randomCard.id)
+      }
+      this.$store.dispatch('lastDraw', lastThreeCards)
+      // this.hand.concat(lastThreeCards);
     },
     removeCardFromDeck (id) {
       this.$store.dispatch('removeCardFromDeck', id)
+    },
+    onResetDeckClick () {
+      this.resetDeck();
+    },
+    resetDeck () {
+      this.$store.dispatch('resetDeck', {ranks: this.ranks, suits: this.suits})
     },
     getRandomCard () {
       return this.deck[Math.floor(Math.random() * Math.floor(this.deck.length))];
     }
   },
   mounted () {
-    this.$store.dispatch('dealCards', {ranks: this.ranks, suits: this.suits})
+    this.$store.dispatch('resetDeck', {ranks: this.ranks, suits: this.suits})
   }
 }
 </script>
