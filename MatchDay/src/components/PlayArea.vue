@@ -7,25 +7,25 @@
     >
     <div>
       <div v-if="hand[0]">
-        <p>{{ hand[0].suit }} {{ hand[0].rank }}</p>
+        <p class="card">{{ hand[0].suit }} {{ hand[0].rank }}</p>
       </div>
       <div v-if="hand[1]">
-        <p>{{ hand[1].suit }} {{ hand[1].rank }}</p>
+        <p class="card">{{ hand[1].suit }} {{ hand[1].rank }}</p>
       </div>
       <div v-if="hand[2]">
-        <p>{{ hand[2].suit }} {{ hand[2].rank }}</p>
+        <p class="card">{{ hand[2].suit }} {{ hand[2].rank }}</p>
       </div>
       <div v-else-if="!hand[2] && choices[0]">
         <v-btn @click="drawOptionOne()">{{ choices[0].suit }} {{ choices[0].rank }}</v-btn>
       </div>
       <div v-if="hand[3]">
-        <p>{{ hand[3].suit }} {{ hand[3].rank }}</p>
+        <p class="card">{{ hand[3].suit }} {{ hand[3].rank }}</p>
       </div>
       <div v-else-if="!hand[3] && choices[1]">
         <v-btn @click="drawOptionTwo()">{{ choices[1].suit }} {{ choices[1].rank }}</v-btn>
       </div>
       <div v-if="hand[4]">
-        <p>{{ hand[4].suit }} {{ hand[4].rank }}</p>
+        <p class="card">{{ hand[4].suit }} {{ hand[4].rank }}</p>
       </div>
     </div>
   </div>
@@ -66,10 +66,10 @@ export default {
         1,2,3,4,5,6,7,8,9,10,11,12,13
       ],
       suits: [
-        's',
-        'c',
-        'h',
-        'd'
+        'S',
+        'C',
+        'H',
+        'D'
       ],
     }
   },
@@ -134,5 +134,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .card {
+   color: #f9d6d6; 
+  }
 </style>
