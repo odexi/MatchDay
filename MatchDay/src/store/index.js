@@ -11,10 +11,6 @@ const state = {
     choices: [],
 }
 
-const getters = {
-
-}
-
 const actions = {
     firstDraw ({ commit }, payload) {
         commit ('firstDraw', payload)
@@ -34,20 +30,10 @@ const mutations = {
     firstDraw (state, payload) {
         state.hand = payload.hand;
         state.choices = payload.choices;
-
-        console.log("First draw:")
-        for (let card of state.deck) {
-            console.log(card.suit, card.rank)
-        }
     },
     lastDraw (state, lastCards) {
         state.hand = state.hand.concat(lastCards)
         state.choices = [];
-
-        console.log("Last draw:")
-        for (let card of state.deck) {
-            console.log(card.suit, card.rank)
-        }
     },
     resetDeck (state, payload) {
         state.deck = [];
@@ -64,13 +50,8 @@ const mutations = {
 
                 state.deck.push(card)
             }
-        }
-        for (let card of state.deck) {
-            console.log(card.suit, card.rank)
-        }
-        
+        }        
     },
-
     removeCardFromDeck (state, id) {
         state.deck.splice(state.deck.indexOf(state.deck.find(d => d.id === id)), 1);
     }
@@ -78,10 +59,8 @@ const mutations = {
 
 const store = new Vuex.Store({
     state,
-    getters,
     actions,
     mutations,
-    // modules: { course, user, modal, essay, records }
   })
   
   export default store

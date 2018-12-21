@@ -27,20 +27,6 @@
       <div v-if="hand[4]">
         <p>{{ hand[4].suit }} {{ hand[4].rank }}</p>
       </div>
-      <!-- <div 
-      class="locked-cards" 
-      v-for="(card) in hand.lockedCards" 
-      :key="card.id"
-      >
-        <p>{{ card.suit }} {{ card.rank }}</p>
-      </div>
-      <div class="optional-cards"></div>
-      
-    <v-btn></v-btn> -->
-    </div>
-    
-    <div style="background-color: white; width: 20%; height: 80%;">
-
     </div>
   </div>
   <div>
@@ -104,8 +90,6 @@ export default {
         this.removeCardFromDeck(randomOptionCard.id)
       }
       this.$store.dispatch('firstDraw', {hand: drewCards, choices: drewChoices})
-      // this.hand = drewCards;
-      // this.drawOptions = drewChoices;
     },
     drawOptionOne () {
       let lastThreeCards = []
@@ -117,7 +101,6 @@ export default {
         this.removeCardFromDeck(randomCard.id)
       }
       this.$store.dispatch('lastDraw', lastThreeCards)
-      // this.hand.concat(lastThreeCards);
     },
     drawOptionTwo () {
       let lastThreeCards = []
@@ -129,7 +112,6 @@ export default {
         this.removeCardFromDeck(randomCard.id)
       }
       this.$store.dispatch('lastDraw', lastThreeCards)
-      // this.hand.concat(lastThreeCards);
     },
     removeCardFromDeck (id) {
       this.$store.dispatch('removeCardFromDeck', id)
