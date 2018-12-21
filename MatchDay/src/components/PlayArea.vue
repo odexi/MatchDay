@@ -10,13 +10,28 @@
     </div>
   </div>
   <div>
-    <button type="button" @click="onDealCardsClick()">Deal</button>
+    <v-btn @click="onDealCardsClick()">Deal</v-btn>
+    <v-btn @click="onRandomCardClick()">Random Card</v-btn>
   </div>
 </div>
 </template>
 
 <script>
+
 export default {
+  computed: {
+    deck: {
+      get () {
+        return this.$store.state.deck;
+      }
+    },
+    randomCard: {
+      get () {
+        
+      }
+    },
+
+  },
   data () {
     return {
       ranks: [
@@ -33,6 +48,17 @@ export default {
   methods: {
     onDealCardsClick () {
       this.$store.dispatch('dealCards', {ranks: this.ranks, suits: this.suits})
+    },
+    onRandomCardClick () {
+      let randomCard = this.getRandomCard();
+      this.removeCardFromDeck(randomCard.id)
+      console.log(this.getRandomCard())
+    },
+    removeCardFromDeck (id) {
+      this.$store.dispatch('removeCardFromDeck', id)
+    },
+    getRandomCard () {
+      return Math.floor(Math.random() * Math.floor(this.deck.length - 1));
     }
   }
 }

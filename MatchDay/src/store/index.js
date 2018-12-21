@@ -1,16 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Card from '@/models/card'
+import guid from 'uuid/v4'
 
 Vue.use(Vuex)
 
 const state = {
-    deck: [
-        {
-            suit: '',
-            rank: ''
-        }
-    ]
+    deck: []
 }
 
 const getters = {
@@ -20,6 +16,9 @@ const getters = {
 const actions = {
     dealCards ({ commit }, payload) {
         commit ('dealCards', payload)
+    },
+    removeCardFromDeck ({ commit }, id) {
+        commit ('removeCardFromDeck', id)
     }
 }
 
@@ -30,13 +29,18 @@ const mutations = {
     
                 let card = {
                     suit: suit,
-                    rank: rank
+                    rank: rank,
+                    id: guid()
                 }
 
                 state.deck.push(card)
             }
         }
         console.log(payload)
+    },
+
+    removeCardFromDeck (state, id) {
+        state.deck.splice(state.deck.indexOf(d => d.id === id), 1);
     }
 }
 
