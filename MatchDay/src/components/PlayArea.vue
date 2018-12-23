@@ -46,9 +46,11 @@
   </div>
   <div>
     <v-btn @click="onDealCardsClick()" :disabled="choices.length > 0">Deal</v-btn>
-    <v-btn @click="onResetDeckClick()">Reset</v-btn>
-    <v-btn @click="royalFlush()">Royal flush</v-btn>
-    <v-btn @click="fourOfAKind()">Four of a kind</v-btn>
+    <v-btn @click="onResetDeckClick()">Reset</v-btn><br>
+    <v-btn @click="royalFlush()">Royal flush</v-btn><br>
+    <v-btn @click="straightFlush()">Straight flush</v-btn><br>
+    <v-btn @click="fourOfAKind()">Four of a kind</v-btn><br>
+    <v-btn @click="fullHouse()">Fullhouse</v-btn><br>
   </div>
   <div v-if="resultReady">
 
@@ -149,7 +151,7 @@ export default {
       let orderedRanks = []
       let finalSuits = []
       for (let card of this.hand) {
-        orderedRanks.push(card.rank)
+        orderedRanks.push(parseInt(card.rank))
         finalSuits.push(card.suit)
       }
       orderedRanks.sort(function(a, b)
@@ -166,20 +168,27 @@ export default {
 
       let ranksFor4ofaKind = []
       //Royal flush
-      if (orderedRanks[0] === '1' && 
-          orderedRanks[1] === '10' && 
-          orderedRanks[2] === '11' &&
-          orderedRanks[3] === '12' &&
-          orderedRanks[4] === '13' &&
+      if (orderedRanks[0] === 1 && 
+          orderedRanks[1] === 10 && 
+          orderedRanks[4] === 13 &&
           allEqual(finalSuits)) {
         console.log("You got royal flush!")
       }
+      //Straight flush
+      if (orderedRanks[4] === orderedRanks[0] + 4 &&
+          allEqual(finalSuits)) {
+        console.log("You got straight flush!")
+      }
       //4 of a kind
-      ranksFor4ofaKind = orderedRanks
-      // ranksFor4ofaKind.splice(0,1)
-      if (allEqual(ranksFor4ofaKind.slice(0,3)) || 
-          allEqual(ranksFor4ofaKind.slice(1,4))) {
+      if (allEqual(orderedRanks.slice(0,4)) || 
+          allEqual(orderedRanks.slice(1,5))) {
         console.log("You got neloset!")
+      }
+      //Fullhouse
+      if ((allEqual(orderedRanks.slice(0,3)) && 
+          allEqual(orderedRanks.slice(3,5))) || (allEqual(orderedRanks.slice(0,2)) && 
+          allEqual(orderedRanks.slice(2,5)))) {
+        console.log("You got fullhouse!")
       }
       
 
@@ -223,7 +232,27 @@ export default {
       this.handleResult();
     },
     straightFlush () {
-      
+      this.$store.state.hand = [{
+        rank: '10',
+        suit: 'H'
+      },
+      {
+        rank: '11',
+        suit: 'H'
+      },
+      {
+        rank: '8',
+        suit: 'H'
+      },
+      {
+        rank: '7',
+        suit: 'H'
+      },
+      {
+        rank: '9',
+        suit: 'H'
+      }]
+      this.handleResult();
     },
     fourOfAKind () {
       this.$store.state.hand = [{
@@ -250,7 +279,28 @@ export default {
       this.handleResult();
     },
     fullHouse () {
-      
+      this.$store.state.hand = [{
+        rank: '10',
+        suit: 'C'
+      },
+      {
+        rank: '13',
+        suit: 'H'
+      },
+      {
+        rank: '10',
+        suit: 'S'
+      },
+      {
+        rank: '10',
+        suit: 'D'
+      },
+      {
+        rank: '13',
+        suit: 'D'
+      }]
+
+      this.handleResult();
     },
     flush () {
       
