@@ -8,15 +8,18 @@ Vue.use(Vuex)
 const state = {
     deck: [],
     hand: [],
-    choices: [],
+    choices: {
+        visible: [],
+        hidden: []
+    },
 }
 
 const actions = {
     firstDraw ({ commit }, payload) {
         commit ('firstDraw', payload)
     },
-    lastDraw ({ commit }, lastCards) {
-        commit ('lastDraw', lastCards)
+    lastDraw ({ commit }, value) {
+        commit ('lastDraw', value)
     },
     resetDeck ({ commit }, payload) {
         commit ('resetDeck', payload)
@@ -31,14 +34,26 @@ const mutations = {
         state.hand = payload.hand;
         state.choices = payload.choices;
     },
-    lastDraw (state, lastCards) {
+    lastDraw (state, value) {
+        let lastCards = [];
+        if (value === 0) {
+            
+            lastCards.push(state.choices.visible[0]);
+            lastCards.push(state.choices.hidden[0]);
+            lastCards.push(state.choices.hidden[1]);
+        }
+        else {
+            lastCards.push(state.choices.visible[1]);
+            lastCards.push(state.choices.hidden[2]);
+            lastCards.push(state.choices.hidden[3]);
+        }
         state.hand = state.hand.concat(lastCards)
-        state.choices = [];
+        state.choices = {};
     },
     resetDeck (state, payload) {
         state.deck = [];
         state.hand = [];
-        state.choices = [];
+        state.choices = {};
         for (let suit of payload.suits) {
             for (let rank of payload.ranks) {
     
