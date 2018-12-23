@@ -51,6 +51,11 @@
     <v-btn @click="straightFlush()">Straight flush</v-btn><br>
     <v-btn @click="fourOfAKind()">Four of a kind</v-btn><br>
     <v-btn @click="fullHouse()">Fullhouse</v-btn><br>
+    <v-btn @click="flush()">Flush</v-btn><br>
+    <v-btn @click="straight()">Straight</v-btn><br>
+    <v-btn @click="threeOfAKind()">Three of a kind</v-btn><br>
+    <v-btn @click="twoPairs()">Two pairs</v-btn><br>
+    <v-btn @click="pair10A()">pair10-A</v-btn><br>
   </div>
   <div v-if="resultReady">
 
@@ -190,7 +195,38 @@ export default {
           allEqual(orderedRanks.slice(2,5)))) {
         console.log("You got fullhouse!")
       }
-      
+      //Flush
+      if (allEqual(finalSuits)) {
+        console.log("You got flush!")
+      }
+      //Straight
+      if ((orderedRanks[4] === orderedRanks[0] + 4) ||
+          (orderedRanks[0] === 1 && 
+          orderedRanks[1] === 10 && 
+          orderedRanks[4] === 13)) {
+        console.log("You got straight!")
+      }
+      //3 of a kind
+      if (allEqual(orderedRanks.slice(0,3)) || 
+          allEqual(orderedRanks.slice(1,4)) ||
+          allEqual(orderedRanks.slice(2,5))) {
+        console.log("You got kolmoset!")
+      }
+      //Two pairs
+      if ((allEqual(orderedRanks.slice(0,2)) &&
+          allEqual(orderedRanks.slice(1,3))) || 
+          (allEqual(orderedRanks.slice(0,2)) &&
+          allEqual(orderedRanks.slice(2,4))) ||
+          (allEqual(orderedRanks.slice(0,2)) &&
+          allEqual(orderedRanks.slice(3,5))) ||
+          (allEqual(orderedRanks.slice(1,3)) &&
+          allEqual(orderedRanks.slice(2,4))) ||
+          (allEqual(orderedRanks.slice(1,3)) &&
+          allEqual(orderedRanks.slice(3,5))) ||
+          (allEqual(orderedRanks.slice(2,4)) &&
+          allEqual(orderedRanks.slice(3,5)))) {
+        console.log("You got two pairs!")
+      }
 
 
 
@@ -303,20 +339,104 @@ export default {
       this.handleResult();
     },
     flush () {
-      
+      this.$store.state.hand = [{
+        rank: '10',
+        suit: 'C'
+      },
+      {
+        rank: '9',
+        suit: 'C'
+      },
+      {
+        rank: '3',
+        suit: 'C'
+      },
+      {
+        rank: '2',
+        suit: 'C'
+      },
+      {
+        rank: '13',
+        suit: 'C'
+      }]
+
+      this.handleResult();
     },
     straight () {
-      
+      this.$store.state.hand = [{
+        rank: '10',
+        suit: 'H'
+      },
+      {
+        rank: '9',
+        suit: 'C'
+      },
+      {
+        rank: '11',
+        suit: 'S'
+      },
+      {
+        rank: '7',
+        suit: 'C'
+      },
+      {
+        rank: '8',
+        suit: 'C'
+      }]
+
+      this.handleResult();
     },
-    ThreeOfAKind () {
-      
+    threeOfAKind () {
+      this.$store.state.hand = [{
+        rank: '10',
+        suit: 'C'
+      },
+      {
+        rank: '3',
+        suit: 'H'
+      },
+      {
+        rank: '10',
+        suit: 'S'
+      },
+      {
+        rank: '10',
+        suit: 'D'
+      },
+      {
+        rank: '2',
+        suit: 'D'
+      }]
+
+      this.handleResult();
     },
     twoPairs () {
-      
+      this.$store.state.hand = [{
+        rank: '10',
+        suit: 'C'
+      },
+      {
+        rank: '3',
+        suit: 'H'
+      },
+      {
+        rank: '10',
+        suit: 'S'
+      },
+      {
+        rank: '3',
+        suit: 'D'
+      },
+      {
+        rank: '2',
+        suit: 'D'
+      }]
+
+      this.handleResult();
     },
     pair10A () {
       
-    }
+    },
   },
   mounted () {
     this.$store.dispatch('resetDeck', {ranks: this.ranks, suits: this.suits})
